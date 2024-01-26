@@ -36,3 +36,25 @@
     transform: rotate(360deg);
   }
 }
+button{
+  font-size: 18px;
+  padding: 5px;
+  background-color: #282c34;
+  color: white;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.zoom:hover {
+  transform: scale(1.1); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+.bottom-left {
+  position: absolute;
+  bottom: 8px;
+  left: 16px;
+}
