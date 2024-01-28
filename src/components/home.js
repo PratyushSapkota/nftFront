@@ -17,15 +17,6 @@ export function Home() {
 
     const [data, setData] = useState([])
 
-    const [feeAccount, setFeeAccount] = useState(null)
-
-    const buy = async ( _item ) => {
-        console.log(_item)
-        await (await market.buyNft(_item.tokenId, { value: _item.price })).wait()
-        getData()
-    }
-
-
     async function getData() {
 
         const items = []
@@ -33,11 +24,11 @@ export function Home() {
 
         for (let i = 1; i <= itemCount; i++) {
             const item = await market.items(i)
+            console.log("price: ", (await market.items(item.tokenId)).owner_cut)
             if (!item.sold) {
                 const totalPrice = await market.getPrice(item.tokenId)
                 const uri = await nft.tokenURI(item.tokenId)
                 const metadata = await (await fetch(uri)).json()
-
                 items.push({
                     "itemId": item.tokenId,
                     "name": metadata.name,
@@ -47,7 +38,6 @@ export function Home() {
 
             }
         }
-        console.log(items)
         setData(items)
     }
 
@@ -58,10 +48,7 @@ export function Home() {
 
     return (
         <>
-            <h1>
-                {feeAccount}
-            </h1>
-            <CardList data={data} canBuy={true} buyFunction={buy} />
+            <CardList data={data} canBuy={true} />
         </>
     )
 }

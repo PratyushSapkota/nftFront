@@ -2,33 +2,41 @@
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import Image from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
-import { formatEther } from 'ethers';
+import { ethers } from 'ethers';
 
-function CardList({ data, canBuy, buyFunction }) {
-  const imageStyle ={
-    backgroundSize : "contain",
-    height : "200px"
-  }
+// import marketAbi from "../contract_info/Market-abi.json"
+
+// import marketAddress from "../contract_info/Market-address.json"
+
+// const ethersProvider = new ethers.BrowserProvider(window.ethereum)
+// const signer = await ethersProvider.getSigner()
+// const market = new ethers.Contract(marketAddress.address, marketAbi.abi, signer)
+
+// const buy = async (_itemId) => {
+//   await (await market.buyNft(_itemId)).wait()
+// }
+
+async function CardList({ data, canBuy }) {
+
+
   return (
     <Row xs={1} md={4} className="g-4">
       {data.map((item, idx) => (
         <Col key={idx}>
           <Card style={{ width: '18rem' }}>
-            <Card.Img variant="top" src={item.image} style={imageStyle}/>
+            <Card.Img variant="top" src={item.image} />
             <Card.Body>
               <Card.Title>{item.name}</Card.Title>
               {
-                canBuy ?
+                canBuy
+                  ?
                   <>
                     <Card.Text>
-                      {/* <Button variant='info' > */}
-                        <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
-                        <span style={ {padding: "10px", paddingRight: "55%"} }>{formatEther(item.price)}</span>
-                        <Button variant='info' style={{alignContent: "right"}} onClick={() => buyFunction(item)} >Buy</Button>
-                      {/* </Button> */}
+                      <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
+                      <span style={{ padding: "10px", paddingRight: "55%" }}>ethers.formatEther(item.price)</span>
+                      <Button variant='info' style={{ alignContent: "right" }} >Buy</Button>
                     </Card.Text>
                   </>
                   :
@@ -36,10 +44,7 @@ function CardList({ data, canBuy, buyFunction }) {
                     <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
                     {item.price}
                   </>
-
               }
-
-
             </Card.Body>
           </Card>
         </Col>

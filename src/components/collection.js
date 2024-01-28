@@ -59,7 +59,7 @@ export function CollectionI() {
   return (
     <>
       <h3>Listed</h3>
-      <CardList data={listedData} canBuy={false} />
+      {/* <CardList data={listedData} canBuy={false} /> */}
     </>
   )
 

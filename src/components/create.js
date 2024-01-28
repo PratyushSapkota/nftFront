@@ -41,6 +41,7 @@ export function Create() {
   const [price, setPrice] = useState(null)
   const [name, setName] = useState(null)
   const [coOwn, changeCoOwn] = useState(false)
+  const [coOwnAddr, setCoOwnAddr] = useState()
   const [selfCut, setSelfCut] = useState(50)
 
 
@@ -51,12 +52,37 @@ export function Create() {
       setImage(file)
     }
   }
+  /*
+    IERC721 _nft,
+        uint256 _tokenId,
+        uint256 _price,
+        address _coOwner,
+        uint256 _selfCut
+  */
 
   const mintAndList = async (_uri) => {
     await (await nft.mint(_uri)).wait()
     const tokenCount = await nft.tokenCount()
     await (await nft.setApprovalForAll(market.target, true)).wait()
-    await (await market.listItem(nft.target, tokenCount, parseEther(price.toString()))).wait()
+
+    if(coOwn){
+      await ( await market.Co_listItem(
+        nft.target,
+        tokenCount,
+        parseEther(price.toString()),
+        coOwnAddr,
+        selfCut
+      )).wait()
+    }else{
+      await (await market.listItem(
+        nft.target, 
+        tokenCount, 
+        parseEther(price.toString())
+      )).wait()
+    }
+
+    console.log("When does this log")
+
   }
 
   const createNFT = async (_imageUrl) => {
@@ -135,7 +161,7 @@ export function Create() {
             <br />
             <InputGroup>
               <InputGroup.Text>Co-Owner Address</InputGroup.Text>
-              <Form.Control type='text' onChange={(e) => console.log((e.target.value).length)} />
+              <Form.Control type='text' onChange={(e) => setCoOwnAddr(e.target.value)} />
             </InputGroup>
             <br />
             <InputGroup>
