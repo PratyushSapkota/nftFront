@@ -2,6 +2,7 @@ import React from "react";
 import requestAccount from "../App";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
+import { Nav } from "react-bootstrap";
 
 const metamaskLogo = "https://images.ctfassets.net/ohcexbfyr6py/5JMWSHUdERAyrq0mHT39zy/7c932a6ee03c6cafac88714bd443dbc0/Metamask.png"
 

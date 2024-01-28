@@ -8,13 +8,16 @@ import { useState } from 'react';
 import { formatEther } from 'ethers';
 
 function CardList({ data, canBuy, buyFunction }) {
-
+  const imageStyle ={
+    backgroundSize : "contain",
+    height : "200px"
+  }
   return (
     <Row xs={1} md={4} className="g-4">
       {data.map((item, idx) => (
         <Col key={idx}>
           <Card style={{ width: '18rem' }}>
-            <Card.Img variant="top" src={item.image} />
+            <Card.Img variant="top" src={item.image} style={imageStyle}/>
             <Card.Body>
               <Card.Title>{item.name}</Card.Title>
               {

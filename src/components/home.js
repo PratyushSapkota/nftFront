@@ -47,7 +47,7 @@ export function Home() {
 
             }
         }
-
+        console.log(items)
         setData(items)
     }
 

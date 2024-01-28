@@ -50,36 +50,39 @@ function App() {
     checkWallet()
   }, [])
 
-
+  
   return (
-
-
+    
+    
     <>
       <Router>
         <Navbar connectValue={connectText} account={account} connectFunction={() => requestAccount()} />
-
+        
         {
           account != null ?
-
-            loading ?
-              "Loading"
-              :
-
-              <Routes>
+          
+          loading ?
+          "Loading"
+          :
+          
+          <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/collection" element={<CollectionI />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/create" element={<Create />} />
               </Routes>
             :
-            "Please Connect"
-
-        }
-
+            <h1 className="text-danger text-center" >Please Connect</h1>
+            
+          }
+          
 
 
 
       </Router>
+
+
+
     </>
   );
 

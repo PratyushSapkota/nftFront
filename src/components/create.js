@@ -74,7 +74,7 @@ export function Create() {
         }
       }
     )
-    mintAndList("https://gateway.pinata.cloud/ipfs/" + res.data.IpfsHash)
+    mintAndList("https://amethyst-legal-albatross-808.mypinata.cloud/ipfs/" + res.data.IpfsHash)
   }
 
   const upload = async (_file) => {
@@ -96,7 +96,7 @@ export function Create() {
 
     // console.log(res)
     console.log("IMAGE: ", res.data.IpfsHash)
-    createNFT(`https://gateway.pinata.cloud/ipfs/${res.data.IpfsHash}`)
+    createNFT(`https://amethyst-legal-albatross-808.mypinata.cloud/ipfs/${res.data.IpfsHash}`)
   }
 
   useEffect(() => {

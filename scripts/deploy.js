@@ -20,7 +20,7 @@ async function main() {
 
 
 function saveFiles( contract, name, _network ) {
-    const contractDirectory = "F:/School/nft_marketplace/src/contract_info"
+    const contractDirectory = "/Users/suyogkarki/Desktop/nftFront/src/contract_info"
 
     const data = {
         address: `${contract.target}`,
