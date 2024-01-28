@@ -5,41 +5,48 @@ import Row from 'react-bootstrap/Row';
 import Image from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
+import { formatEther } from 'ethers';
 
-function GridExample({ _length }) {
-
-  const [data, setData] = useState(
-    [
-      {"id": 1, "name": "a", "price":6, "url":"https://www.w3schools.com/w3css/img_5terre.jpg", "logo":""}, 
-      {"id": 1, "name": "a", "price":6, "url":"https://www.w3schools.com/w3css/img_5terre.jpg" }, 
-      {"id": 1, "name": "a", "price":3, "url":"https://www.w3schools.com/w3css/img_5terre.jpg" }, 
-      {"id": 1, "name": "a", "price":9, "url":"https://www.w3schools.com/w3css/img_5terre.jpg" }, 
-      {"id": 1, "name": "a", "price":8, "url":"https://www.w3schools.com/w3css/img_5terre.jpg" }, 
-      {"id": 1, "name": "a", "price":7, "url":"https://www.w3schools.com/w3css/img_5terre.jpg" }, 
-      {"id": 1, "name": "a", "price":5, "url":"https://www.w3schools.com/w3css/img_5terre.jpg" }, 
-      
-  ])
-
+function CardList({ data, canBuy, buyFunction }) {
 
   return (
-    <Row xs={1} md={_length} className="g-4">
+    <Row xs={1} md={4} className="g-4">
       {data.map((item, idx) => (
         <Col key={idx}>
-         <div class="zoom">
           <Card style={{ width: '18rem' }}>
-          <Card.Img variant="top" src= {item.url} />
+            <Card.Img variant="top" src={item.image} />
             <Card.Body>
-              <div class="bottom-left">
-              <Card.Title>{item.name}</Card.Title> 
-            <Button variant="primary">Buy {item.price}</Button></div>
+              <Card.Title>{item.name}</Card.Title>
+              {
+                canBuy ?
+                  <>
+                    <Card.Text>
+                      {/* <Button variant='info' > */}
+                        <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
+                        <span style={ {padding: "10px", paddingRight: "55%"} }>{formatEther(item.price)}</span>
+                        <Button variant='info' style={{alignContent: "right"}} onClick={() => buyFunction(item)} >Buy</Button>
+                      {/* </Button> */}
+                    </Card.Text>
+                  </>
+                  :
+                  <>
+                    <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
+                    {item.price}
+                  </>
+
+              }
+
+
             </Card.Body>
           </Card>
-          </div>
         </Col>
       ))}
     </Row>
   );
+
+
+
 }
 
-export default GridExample;
+export default CardList;
 

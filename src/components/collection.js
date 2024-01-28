@@ -1,39 +1,66 @@
-import React from "react";
-import Card from 'react-bootstrap/Card';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Image from 'react-bootstrap';
+import React, { useEffect } from "react";
 import { useState } from 'react';
-export function CollectionI(_length){
-    const [data, setData] = useState(
-        [
-          {"id": 1, "name": "a", "price":6, "url":"https://www.w3schools.com/w3css/img_5terre.jpg" }, 
-          {"id": 1, "name": "a", "price":6, "url":"https://www.w3schools.com/w3css/img_5terre.jpg" }, 
-          {"id": 1, "name": "a", "price":3, "url":"https://www.w3schools.com/w3css/img_5terre.jpg" }, 
-          {"id": 1, "name": "a", "price":9, "url":"https://www.w3schools.com/w3css/img_5terre.jpg" }, 
-          {"id": 1, "name": "a", "price":8, "url":"https://www.w3schools.com/w3css/img_5terre.jpg" }, 
-          {"id": 1, "name": "a", "price":7, "url":"https://www.w3schools.com/w3css/img_5terre.jpg" }, 
-          {"id": 1, "name": "a", "price":5, "url":"https://www.w3schools.com/w3css/img_5terre.jpg" }, 
-          
-      ])
-    return(
-        <>
-    <Row xs={1} md={_length} className="g-4">
-      {data.map((item, idx) => (
-        <Col key={idx}>
-         <div class="zoom">
-          <Card style={{ width: '18rem' }}>
-          <Card.Img variant="top" src= {item.url} />
-            <Card.Body>
-              <div class="bottom-left">
-              <Card.Title>{item.name}</Card.Title> {item.price}</div>
-            </Card.Body>
-          </Card>
-          </div>
-        </Col>
-      ))}
-    </Row>
-        </>
-    )
+import CardList from "./card";
+import { ethers, parseEther } from "ethers";
+import marketAbi from "../contract_info/Market-abi.json"
+import nftAbi from "../contract_info/NFT-abi.json"
+
+import marketAddress from "../contract_info/Market-address.json"
+import nftAddress from "../contract_info/Nft-address.json"
+
+
+export function CollectionI() {
+  const [listedData, setlistedData] = useState([])
+
+  async function getCollectionData() {
+
+    const ethersProvider = new ethers.BrowserProvider(window.ethereum)
+    const signer = await ethersProvider.getSigner()
+    const market = new ethers.Contract(marketAddress.address, marketAbi.abi, signer)
+    const nft = new ethers.Contract(nftAddress.address, nftAbi.abi, signer)
+
+    const listedItem = []
+    const boughtItem = []
+
+    const itemCount = await market.itemCount()
+
+    for (let i = 0; i <= itemCount; i++) {
+      const item = await market.items(i)
+      if (item.owner == signer.address || item.co_owner == signer.address) {
+
+
+
+        const uri = await nft.tokenURI(item.tokenId)
+        const metadata = await (await fetch(uri)).json()
+        const totalPrice = Number(await market.getPrice(item.tokenId)) / Number(parseEther("1"))
+
+        if (!item.sold) {
+          listedItem.push({
+            "name": metadata.name,
+            "image": metadata.Image,
+            "price": totalPrice.toString(),
+            "own": (item.owner == signer.address)
+          })
+        }
+      }
+
+    }
+    setlistedData(listedItem)
+    console.log(listedItem)
+  }
+
+
+
+  useEffect(() => {
+    getCollectionData()
+  }, [])
+
+
+  return (
+    <>
+      <h3>Listed</h3>
+      <CardList data={listedData} canBuy={false} />
+    </>
+  )
 
 }
