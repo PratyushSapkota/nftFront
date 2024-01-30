@@ -9,13 +9,15 @@ import axios from 'axios'
 import FormData from "form-data"
 import marketAbi from "../contract_info/Market-abi.json"
 import nftAbi from "../contract_info/NFT-abi.json"
+import Spinner from 'react-bootstrap/Spinner';
+import { redirect } from 'react-router-dom';
+
 
 import marketAddress from "../contract_info/Market-address.json"
 import nftAddress from "../contract_info/Nft-address.json"
 
 const apiKey = "36884d16602f1fbe240e"
 const apiSecret = "77b008440155fc49b21ae2883c784ae6be7dde31edc321aa6b4263ef8be0d4ed"
-
 
 
 const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`
@@ -25,6 +27,14 @@ export function Create() {
 
   const [market, setMarket] = useState(null)
   const [nft, setNft] = useState(null)
+  const [image, setImage] = useState(null)
+  const [price, setPrice] = useState(null)
+  const [name, setName] = useState(null)
+  const [coOwn, changeCoOwn] = useState(false)
+  const [coOwnAddr, setCoOwnAddr] = useState()
+  const [selfCut, setSelfCut] = useState(50)
+  const [loading, setLoading] = useState(false)
+
 
   async function start() {
     const ethersProvider = new ethers.BrowserProvider(window.ethereum)
@@ -35,14 +45,8 @@ export function Create() {
     setMarket(market)
     setNft(nft)
 
-  } 
+  }
 
-  const [image, setImage] = useState(null)
-  const [price, setPrice] = useState(null)
-  const [name, setName] = useState(null)
-  const [coOwn, changeCoOwn] = useState(false)
-  const [coOwnAddr, setCoOwnAddr] = useState()
-  const [selfCut, setSelfCut] = useState(50)
 
 
   const setFile = (e) => {
@@ -52,36 +56,30 @@ export function Create() {
       setImage(file)
     }
   }
-  /*
-    IERC721 _nft,
-        uint256 _tokenId,
-        uint256 _price,
-        address _coOwner,
-        uint256 _selfCut
-  */
 
   const mintAndList = async (_uri) => {
     await (await nft.mint(_uri)).wait()
     const tokenCount = await nft.tokenCount()
     await (await nft.setApprovalForAll(market.target, true)).wait()
 
-    if(coOwn){
-      await ( await market.Co_listItem(
+    if (coOwn) {
+      await (await market.Co_listItem(
         nft.target,
         tokenCount,
         parseEther(price.toString()),
         coOwnAddr,
         selfCut
       )).wait()
-    }else{
+    } else {
       await (await market.listItem(
-        nft.target, 
-        tokenCount, 
+        nft.target,
+        tokenCount,
         parseEther(price.toString())
       )).wait()
     }
 
-    console.log("When does this log")
+    setLoading(false)
+
 
   }
 
@@ -104,6 +102,7 @@ export function Create() {
   }
 
   const upload = async (_file) => {
+    setLoading(true)
     const formData = new FormData()
     formData.append("file", _file)
 
@@ -133,52 +132,58 @@ export function Create() {
   return (
     <>
       {
-        coOwn ?
-          "Co-Own" :
-          "Single Own"
-      }
-
-      <Form.Control type='file' onChange={setFile} />
-      <br />
-      <InputGroup>
-        <InputGroup.Text>Name</InputGroup.Text>
-        <Form.Control type='text' onChange={(e) => setName(e.target.value)} />
-      </InputGroup>
-      <br />
-
-      <InputGroup>
-        <InputGroup.Text>Price</InputGroup.Text>
-        <Form.Control type='number' onChange={(e) => setPrice(e.target.value)} />
-      </InputGroup>
-      <br />
-
-      <Form.Check type='switch' value={true} label="Co Own" onChange={() => coOwn ? changeCoOwn(false) : changeCoOwn(true)} />
-
-
-      {
-        coOwn ?
-          <>
-            <br />
-            <InputGroup>
-              <InputGroup.Text>Co-Owner Address</InputGroup.Text>
-              <Form.Control type='text' onChange={(e) => setCoOwnAddr(e.target.value)} />
-            </InputGroup>
-            <br />
-            <InputGroup>
-              Your Cut: {selfCut}% <br />
-              Co-Owner Cut: {100 - selfCut}%
-              <Form.Range style={{ width: "50%" }} onChange={(e) => setSelfCut(e.target.value)} />
-            </InputGroup>
-            <br />
-          </>
+        loading ?
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: "90vh" }}>
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
           :
           <>
+            <Form.Control type='file' onChange={setFile} />
             <br />
+            <InputGroup>
+              <InputGroup.Text>Name</InputGroup.Text>
+              <Form.Control type='text' onChange={(e) => setName(e.target.value)} />
+            </InputGroup>
+            <br />
+
+            <InputGroup>
+              <InputGroup.Text>Price</InputGroup.Text>
+              <Form.Control type='number' onChange={(e) => setPrice(e.target.value)} />
+            </InputGroup>
+            <br />
+
+            <Form.Check type='switch' value={true} label="Co Own" onChange={() => coOwn ? changeCoOwn(false) : changeCoOwn(true)} />
+
+            {
+              coOwn ?
+                <>
+                  <br />
+                  <InputGroup>
+                    <InputGroup.Text>Co-Owner Address</InputGroup.Text>
+                    <Form.Control type='text' onChange={(e) => setCoOwnAddr(e.target.value)} />
+                  </InputGroup>
+                  <br />
+                  <InputGroup>
+                    Your Cut: {selfCut}% <br />
+                    Co-Owner Cut: {100 - selfCut}%
+                    <Form.Range style={{ width: "50%" }} onChange={(e) => setSelfCut(e.target.value)} />
+                  </InputGroup>
+                  <br />
+                </>
+                :
+                <>
+                  <br />
+                </>
+            }
+
+            <button onClick={() => upload(image)} > Upload </button>
           </>
       }
 
-      <button onClick={() => upload(image)} > Upload </button>
     </>
+
   )
 
 }

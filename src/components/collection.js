@@ -8,9 +8,12 @@ import nftAbi from "../contract_info/NFT-abi.json"
 import marketAddress from "../contract_info/Market-address.json"
 import nftAddress from "../contract_info/Nft-address.json"
 
+import Spinner from 'react-bootstrap/Spinner';
 
 export function CollectionI() {
   const [listedData, setlistedData] = useState([])
+  const [boughtData, setBoughtData] = useState([])
+  const [loading, setLoading] = useState(true)
 
   async function getCollectionData() {
 
@@ -27,26 +30,47 @@ export function CollectionI() {
     for (let i = 0; i <= itemCount; i++) {
       const item = await market.items(i)
       if (item.owner == signer.address || item.co_owner == signer.address) {
-
-
-
         const uri = await nft.tokenURI(item.tokenId)
         const metadata = await (await fetch(uri)).json()
-        const totalPrice = Number(await market.getPrice(item.tokenId)) / Number(parseEther("1"))
+        const totalPrice = await market.getPrice(item.tokenId)
 
         if (!item.sold) {
           listedItem.push({
             "name": metadata.name,
             "image": metadata.Image,
             "price": totalPrice.toString(),
-            "own": (item.owner == signer.address)
+            "co_owner": item[5],
+            "ownerCut": item[6]
           })
         }
-      }
 
+      }
+      console.log(item)
     }
+
+    const filter = market.filters.Bought(null, null, null, null, null, null, null, null)
+    const res = await market.queryFilter(filter)
+    await Promise.all(res.map(async i => {
+      let args = i.args
+      if (args[7] == signer.address) {
+        console.log("Found Bought")
+        const id = args[2]
+        const uri = await nft.tokenURI(id)
+        const metadata = await (await fetch(uri)).json()
+        const price = await market.getPrice(id)
+        boughtItem.push({
+          "name": metadata.name,
+          "image": metadata.Image,
+          "price": price.toString(),
+        })
+      }
+    }))
+
+
+
     setlistedData(listedItem)
-    console.log(listedItem)
+    setBoughtData(boughtItem)
+    setLoading(false)
   }
 
 
@@ -58,8 +82,26 @@ export function CollectionI() {
 
   return (
     <>
-      <h3>Listed</h3>
-      {/* <CardList data={listedData} canBuy={false} /> */}
+      {
+        loading ?
+          <>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: "90vh" }}>
+              <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          </>
+          :
+          <>
+            <h3>Listed</h3>
+            <CardList data={listedData} type={'collection'} />
+
+            <h3>Bought</h3>
+            <CardList data={boughtData} type={'bought'} />
+          </>
+
+      }
+
     </>
   )
 

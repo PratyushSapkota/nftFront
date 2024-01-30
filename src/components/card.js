@@ -2,49 +2,78 @@
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import Image from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
-import { ethers } from 'ethers';
+import { formatEther, ethers } from 'ethers';
 
-// import marketAbi from "../contract_info/Market-abi.json"
+import marketAbi from "../contract_info/Market-abi.json"
+import marketAddress from "../contract_info/Market-address.json"
 
-// import marketAddress from "../contract_info/Market-address.json"
+import ProgressBar from 'react-bootstrap/ProgressBar';
 
-// const ethersProvider = new ethers.BrowserProvider(window.ethereum)
-// const signer = await ethersProvider.getSigner()
-// const market = new ethers.Contract(marketAddress.address, marketAbi.abi, signer)
+const ethersProvider = new ethers.BrowserProvider(window.ethereum)
+const signer = await ethersProvider.getSigner()
+const market = new ethers.Contract(marketAddress.address, marketAbi.abi, signer)
 
-// const buy = async (_itemId) => {
-//   await (await market.buyNft(_itemId)).wait()
-// }
 
-async function CardList({ data, canBuy }) {
+function CardList({ data, type }) {
 
+  async function buyFunction(_item) {
+    await (await market.buyNft(_item.itemId, { value: _item.price })).wait()
+  }
 
   return (
-    <Row xs={1} md={4} className="g-4">
+    <Row xs={1} md={4} className="g-4" style={{height: "100vh"}}>
       {data.map((item, idx) => (
         <Col key={idx}>
           <Card style={{ width: '18rem' }}>
-            <Card.Img variant="top" src={item.image} />
-            <Card.Body>
-              <Card.Title>{item.name}</Card.Title>
+
+            <Card.Img variant="top" src={item.image} style={{}} />
+
+            <Card.Body style={{background: ""}} >
+
               {
-                canBuy
-                  ?
+                type == 'canBuy' ?
                   <>
+                    <Card.Title>{item.name}</Card.Title>
                     <Card.Text>
                       <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
-                      <span style={{ padding: "10px", paddingRight: "55%" }}>ethers.formatEther(item.price)</span>
-                      <Button variant='info' style={{ alignContent: "right" }} >Buy</Button>
+                      <span style={{ padding: "10px", paddingRight: "50%" }}>{formatEther(item.price)}</span>
+                      <Button variant='info' style={{ alignContent: "right" }} onClick={() => buyFunction(item)} >Buy</Button>
                     </Card.Text>
                   </>
-                  :
+                  : type == 'collection' ?
                   <>
-                    <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
-                    {item.price}
-                  </>
+                  <Card.Title>{item.name}</Card.Title>
+                      Listing for:
+                      <br />
+                      <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
+                      <span style={{ padding: "10px", paddingRight: "60%" }}>{formatEther(item.price)}</span>
+                      {
+                        item.co_owner != "0x0000000000000000000000000000000000000000" ?
+                          <>
+                            <span style={{ alignContent: "right" }} ><ProgressBar now={item.co_owner != signer.address ? (item.ownerCut).toString() : (100n - item.ownerCut).toString()} label={`${item.co_owner != signer.address ? (item.ownerCut).toString() : (100n - item.ownerCut).toString()}%`} /></span>
+                          </>
+                          :
+                          <></>
+                      }
+
+                      <br />
+                    </>
+                    : type == 'bought' ?
+                      <>
+                        <Card.Title>{item.name}</Card.Title>
+                        Bought For
+                        <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
+                        {formatEther(item.price)}
+                      </>
+                      :
+                      <></>
+
               }
+
+
             </Card.Body>
           </Card>
         </Col>
@@ -57,4 +86,3 @@ async function CardList({ data, canBuy }) {
 }
 
 export default CardList;
-

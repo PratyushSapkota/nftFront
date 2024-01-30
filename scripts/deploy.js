@@ -3,11 +3,11 @@ const fs = require("fs")
 const timeStamp = new Date()
 
 async function main() {
-    const [owner, feeAccount] = await ethers.getSigners()
+    const [owner] = await ethers.getSigners()
 
     const networkName = network.name
     
-    const market = await ethers.deployContract("Market", [feeAccount.address, 1])
+    const market = await ethers.deployContract("Market", [owner.address, 1])
     await market.waitForDeployment()
     console.log("deployed market at: ", market.target)
     saveFiles( market, "Market", networkName )

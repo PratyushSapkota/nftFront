@@ -157,7 +157,7 @@ contract Market is ReentrancyGuard {
 
         Item storage item = items[_itemId];
         require(!item.sold, "Item already sold");
-
+        
         item.nft.transferFrom(address(this), address(msg.sender), _itemId);
         item.sold = true;
 

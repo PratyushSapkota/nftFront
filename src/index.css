@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
 }
 
 code {
@@ -75,4 +76,3 @@ button{
   bottom: 8px;
   left: 16px;
 }
-

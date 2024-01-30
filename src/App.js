@@ -15,6 +15,7 @@ function App() {
   const [account, setAccount] = useState(null)
   const [connectText, setConnectText] = useState()
   const [loading, setLoading] = useState(true)
+  const [Divtest, setTest] = useState("initial")
 
   const checkWallet = () => {
     if (window.ethereum) {

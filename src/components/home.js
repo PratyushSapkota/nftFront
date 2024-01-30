@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CardList from "./card";
-import {ethers, parseEther} from "ethers";
+import { ethers, parseEther } from "ethers";
 
 import marketAbi from "../contract_info/Market-abi.json"
 import nftAbi from "../contract_info/NFT-abi.json"
@@ -8,16 +8,33 @@ import nftAbi from "../contract_info/NFT-abi.json"
 import marketAddress from "../contract_info/Market-address.json"
 import nftAddress from "../contract_info/Nft-address.json"
 
-const ethersProvider = new ethers.BrowserProvider(window.ethereum)
-const signer = await ethersProvider.getSigner()
-const market = new ethers.Contract(marketAddress.address, marketAbi.abi, signer)
-const nft = new ethers.Contract(nftAddress.address, nftAbi.abi, signer)
+import Spinner from 'react-bootstrap/Spinner';
 
-export function Home() {
+const ethersProvider = new ethers.BrowserProvider(window.ethereum)
+let signer = await ethersProvider.getSigner()
+let market, nft
+
+export function Home({ _test }) {
+
 
     const [data, setData] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    const loadContracts = (_signer) => {
+        market = new ethers.Contract(marketAddress.address, marketAbi.abi, _signer)
+        nft = new ethers.Contract(nftAddress.address, nftAbi.abi, _signer)
+
+        window.ethereum.on('accountsChanged', async (accounts) => {
+            signer = await ethersProvider.getSigner()
+            loadContracts(signer)
+        })
+
+    }
+
 
     async function getData() {
+
+        loadContracts(signer)
 
         const items = []
         const itemCount = await market.itemCount()
@@ -25,7 +42,7 @@ export function Home() {
         for (let i = 1; i <= itemCount; i++) {
             const item = await market.items(i)
             console.log("price: ", (await market.items(item.tokenId)).owner_cut)
-            if (!item.sold) {
+            if (!item.sold && (item.owner != signer.address && item.co_owner != signer.address)) {
                 const totalPrice = await market.getPrice(item.tokenId)
                 const uri = await nft.tokenURI(item.tokenId)
                 const metadata = await (await fetch(uri)).json()
@@ -35,10 +52,10 @@ export function Home() {
                     "image": metadata.Image,
                     "price": totalPrice.toString(),
                 })
-
             }
         }
         setData(items)
+        setLoading(false)
     }
 
     useEffect(() => {
@@ -48,7 +65,20 @@ export function Home() {
 
     return (
         <>
-            <CardList data={data} canBuy={true} />
+            {
+                loading ?
+                    <>
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: "90vh" }}>
+                            <Spinner animation="border" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </Spinner>
+                        </div>
+                    </>
+                    :
+                    <>
+                        <CardList data={data} type={'canBuy'} />
+                    </>
+            }
         </>
     )
 }
