@@ -10,7 +10,7 @@ module.exports = {
       chainId: 1337,
       // ganache private keys
       accounts: [
-        '0x2962f0027d5ade5e59ec015aae9919f07d13225a33257e9d401560fb9f77f2d9', //0xea
+        '0x6a1c7991840dda83d5b24165f785e9fdc5c191d39386e4899507a68fdf9a1859', //0xea
       ]
     }
   }

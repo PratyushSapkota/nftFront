@@ -1,5 +1,5 @@
 import { parseEther, ethers } from 'ethers'
-
+import "./card.css"
 import { createFactory, useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -11,11 +11,10 @@ import marketAbi from "../contract_info/Market-abi.json"
 import nftAbi from "../contract_info/NFT-abi.json"
 import Spinner from 'react-bootstrap/Spinner';
 import { redirect } from 'react-router-dom';
-
-
 import marketAddress from "../contract_info/Market-address.json"
 import nftAddress from "../contract_info/Nft-address.json"
 
+const design = {}
 const apiKey = "36884d16602f1fbe240e"
 const apiSecret = "77b008440155fc49b21ae2883c784ae6be7dde31edc321aa6b4263ef8be0d4ed"
 
@@ -130,60 +129,67 @@ export function Create() {
 
 
   return (
-    <>
-      {
-        loading ?
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: "90vh" }}>
-            <Spinner animation="border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </Spinner>
-          </div>
-          :
-          <>
-            <Form.Control type='file' onChange={setFile} />
-            <br />
-            <InputGroup>
-              <InputGroup.Text>Name</InputGroup.Text>
-              <Form.Control type='text' onChange={(e) => setName(e.target.value)} />
-            </InputGroup>
-            <br />
+    <div className='design '>
+      <>
+        <form style={{ padding: "150px" }}>
+          {
+            loading ?
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: "90vh" }}>
+                <Spinner animation="border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              </div>
+              :
+              <>
+                <Form.Control type='file' onChange={setFile} />
+                <br />
+                <InputGroup >
+                  <InputGroup.Text >Name</InputGroup.Text>
+                  <Form.Control type='text' onChange={(e) => setName(e.target.value)} />
+                </InputGroup>
+                <br />
 
-            <InputGroup>
-              <InputGroup.Text>Price</InputGroup.Text>
-              <Form.Control type='number' onChange={(e) => setPrice(e.target.value)} />
-            </InputGroup>
-            <br />
+                <InputGroup>
+                  <InputGroup.Text>Price</InputGroup.Text>
+                  <Form.Control type='number' onChange={(e) => setPrice(e.target.value)} />
+                </InputGroup>
+                <br />
 
-            <Form.Check type='switch' value={true} label="Co Own" onChange={() => coOwn ? changeCoOwn(false) : changeCoOwn(true)} />
+                <Form.Check type='switch' value={true} label="Co Own" onChange={() => coOwn ? changeCoOwn(false) : changeCoOwn(true)} />
 
-            {
-              coOwn ?
-                <>
-                  <br />
-                  <InputGroup>
-                    <InputGroup.Text>Co-Owner Address</InputGroup.Text>
-                    <Form.Control type='text' onChange={(e) => setCoOwnAddr(e.target.value)} />
-                  </InputGroup>
-                  <br />
-                  <InputGroup>
-                    Your Cut: {selfCut}% <br />
-                    Co-Owner Cut: {100 - selfCut}%
-                    <Form.Range style={{ width: "50%" }} onChange={(e) => setSelfCut(e.target.value)} />
-                  </InputGroup>
-                  <br />
-                </>
-                :
-                <>
-                  <br />
-                </>
-            }
+                {
+                  coOwn ?
+                    <>
+                      <br />
+                      <InputGroup>
+                        <InputGroup.Text>Co-Owner Address</InputGroup.Text>
+                        <Form.Control type='text' onChange={(e) => setCoOwnAddr(e.target.value)} />
+                      </InputGroup>
+                      <br />
+                      <InputGroup
+                      >
+                        Your Cut: {selfCut}% <br />
+                        Co-Owner Cut: {100 - selfCut}%
+                        <Form.Range style={{ width: "50%" }} onChange={(e) => setSelfCut(e.target.value)} />
+                      </InputGroup>
+                      <br />
+                    </>
+                    :
+                    <>
 
-            <button onClick={() => upload(image)} > Upload </button>
-          </>
-      }
+                      <br />
+                    </>
+                }
 
-    </>
+                {/* <button onClick={() => upload(image)} > Upload </button> */}
+                <Button variant='info' style={{ background: "white", alignContent: "right" }} onClick={() => upload(image)} >Upload</Button>
 
+              </>
+          }
+        </form>
+      </>
+
+    </div>
   )
 
 }

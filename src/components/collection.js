@@ -4,7 +4,7 @@ import CardList from "./card";
 import { ethers, parseEther } from "ethers";
 import marketAbi from "../contract_info/Market-abi.json"
 import nftAbi from "../contract_info/NFT-abi.json"
-
+import "./card.css"
 import marketAddress from "../contract_info/Market-address.json"
 import nftAddress from "../contract_info/Nft-address.json"
 
@@ -14,7 +14,7 @@ export function CollectionI() {
   const [listedData, setlistedData] = useState([])
   const [boughtData, setBoughtData] = useState([])
   const [loading, setLoading] = useState(true)
-
+  const design = {}
   async function getCollectionData() {
 
     const ethersProvider = new ethers.BrowserProvider(window.ethereum)
@@ -81,28 +81,29 @@ export function CollectionI() {
 
 
   return (
-    <>
-      {
-        loading ?
-          <>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: "90vh" }}>
-              <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            </div>
-          </>
-          :
-          <>
-            <h3>Listed</h3>
-            <CardList data={listedData} type={'collection'} />
+    <div className="design">
+      <>
+        {
+          loading ?
+            <>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: "90vh" }}>
+                <Spinner animation="border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              </div>
+            </>
+            :
+            <>
+              <h3 className="text-center" style={{ padding: "20px" }}>Listed</h3>
+              <CardList data={listedData} type={'collection'} />
 
-            <h3>Bought</h3>
-            <CardList data={boughtData} type={'bought'} />
-          </>
+              <h3 className="text-center" >Bought</h3>
+              <CardList data={boughtData} type={'bought'} />
+            </>
 
-      }
-
-    </>
+        }
+      </>
+    </div>
   )
 
 }

@@ -1,0 +1,26 @@
+
+
+.mainstyle{
+    padding: 30px;
+}
+
+.css{
+    background-color:  #9fd3c7; 
+    text-decoration-color: white;
+}
+.mainstyle.img {
+    width: 200px;
+    height: 300px;
+    object-fit: contain;
+    
+  }
+
+.design{
+    display: block;
+    background-color: #e4eddb;           /*#ececec ; */
+   
+}
+
+.navdesgn{
+    background: #9fd3c7;
+}

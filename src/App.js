@@ -10,7 +10,7 @@ import { ethers } from "ethers"
 
 
 function App() {
-
+  const design = {}
 
   const [account, setAccount] = useState(null)
   const [connectText, setConnectText] = useState()
@@ -51,40 +51,37 @@ function App() {
     checkWallet()
   }, [])
 
-  
+
   return (
-    
-    
-    <>
-      <Router>
-        <Navbar connectValue={connectText} account={account} connectFunction={() => requestAccount()} />
-        
-        {
-          account != null ?
-          
-          loading ?
-          "Loading"
-          :
-          
-          <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/collection" element={<CollectionI />} />
-                <Route path="/home" element={<Home />} />
-                <Route path="/create" element={<Create />} />
-              </Routes>
-            :
-            <h1 className="text-danger text-center" >Please Connect</h1>
-            
+    <div className="design">
+      <>
+        <Router>
+          <Navbar connectValue={connectText} account={account} connectFunction={() => requestAccount()} />
+
+          {
+            account != null ?
+
+              loading ?
+                "Loading"
+                :
+
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/collection" element={<CollectionI />} />
+                  <Route path="/home" element={<Home />} />
+                  <Route path="/create" element={<Create />} />
+                </Routes>
+              :
+              <h1 className="text-danger text-center" style={{ padding: "250px", fontSize: "70px" }} >Please Connect</h1>
+
           }
-          
 
 
 
-      </Router>
 
-
-
-    </>
+        </Router>
+      </>
+    </div>
   );
 
 
