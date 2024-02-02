@@ -30,7 +30,7 @@ function CardList({ data, type }) {
           <Col key={idx}>
             <Card style={{ width: '18rem' }}>
 
-              <Card.Img  variant="top" src={item.image} style={{ width: "286px", height: "170px", objectFit:"fit" }} />
+              <Card.Img  variant="top" className="cardImage"  src={item.image} style={{ width: "286px", height: "170px", objectFit:"fit" }} />
 
               <Card.Body className="css" style={{ background: "" }} >
 

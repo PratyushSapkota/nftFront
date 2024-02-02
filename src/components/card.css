@@ -1,26 +1,26 @@
-
-
-.mainstyle{
+.mainstyle {
     padding: 30px;
 }
 
-.css{
-    background-color:  #9fd3c7; 
+.css {
+    background-color: #9fd3c7;
     text-decoration-color: white;
 }
-.mainstyle.img {
+
+.cardImage {
     width: 200px;
     height: 300px;
-    object-fit: contain;
-    
-  }
+    object-fit: scale-down;
 
-.design{
-    display: block;
-    background-color: #e4eddb;           /*#ececec ; */
-   
 }
 
-.navdesgn{
+.design {
+    display: block;
+    background-color: #e4eddb;
+    /*#ececec ; */
+
+}
+
+.navdesgn {
     background: #9fd3c7;
 }

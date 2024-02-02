@@ -1,6 +1,7 @@
 const { network, artifacts, ethers } = require("hardhat")
 const fs = require("fs")
 const timeStamp = new Date()
+require("dotenv").config()
 
 async function main() {
     const [owner] = await ethers.getSigners()
@@ -20,7 +21,7 @@ async function main() {
 
 
 function saveFiles( contract, name, _network ) {
-    const contractDirectory = "/Users/suyogkarki/Desktop/nftFront/src/contract_info"
+    const contractDirectory = process.env.DEPLOYMENT_PATH
 
     const data = {
         address: `${contract.target}`,
