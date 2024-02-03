@@ -3,9 +3,12 @@ import Navbar from './components/navbar';
 import { Home } from './components/home';
 import { Create } from './components/create.js';
 import { CollectionI } from './components/collection';
+import { Bought } from './components/bought';
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ethers } from "ethers"
+import PaintBox from './components/paint';
+import ScreenshotButton from './components/test2';
 
 
 
@@ -68,8 +71,12 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/collection" element={<CollectionI />} />
+                  <Route path="/bought" element={<Bought />} />
                   <Route path="/home" element={<Home />} />
                   <Route path="/create" element={<Create />} />
+                  <Route path="/test" element={<PaintBox />} />
+                  <Route path="/test2" element={<ScreenshotButton />} />
+                  
                 </Routes>
               :
               <h1 className="text-danger text-center" style={{ padding: "250px", fontSize: "70px" }} >Please Connect</h1>

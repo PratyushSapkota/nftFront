@@ -12,7 +12,6 @@ import Spinner from 'react-bootstrap/Spinner';
 
 export function CollectionI() {
   const [listedData, setlistedData] = useState([])
-  const [boughtData, setBoughtData] = useState([])
   const [loading, setLoading] = useState(true)
   const design = {}
   async function getCollectionData() {
@@ -23,7 +22,6 @@ export function CollectionI() {
     const nft = new ethers.Contract(nftAddress.address, nftAbi.abi, signer)
 
     const listedItem = []
-    const boughtItem = []
 
     const itemCount = await market.itemCount()
 
@@ -48,28 +46,8 @@ export function CollectionI() {
       console.log(item)
     }
 
-    const filter = market.filters.Bought(null, null, null, null, null, null, null, null)
-    const res = await market.queryFilter(filter)
-    await Promise.all(res.map(async i => {
-      let args = i.args
-      if (args[7] == signer.address) {
-        console.log("Found Bought")
-        const id = args[2]
-        const uri = await nft.tokenURI(id)
-        const metadata = await (await fetch(uri)).json()
-        const price = await market.getPrice(id)
-        boughtItem.push({
-          "name": metadata.name,
-          "image": metadata.Image,
-          "price": price.toString(),
-        })
-      }
-    }))
-
-
 
     setlistedData(listedItem)
-    setBoughtData(boughtItem)
     setLoading(false)
   }
 
@@ -94,11 +72,7 @@ export function CollectionI() {
             </>
             :
             <>
-              <h3 className="text-center" style={{ padding: "20px" }}>Listed</h3>
               <CardList data={listedData} type={'collection'} />
-
-              <h3 className="text-center" >Bought</h3>
-              <CardList data={boughtData} type={'bought'} />
             </>
 
         }

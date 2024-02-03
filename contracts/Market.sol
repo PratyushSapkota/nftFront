@@ -4,6 +4,8 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "hardhat/console.sol";
+
+
 contract Market is ReentrancyGuard {
     address payable public immutable feeAccount;
     uint256 public immutable feePercentage;
@@ -149,6 +151,13 @@ contract Market is ReentrancyGuard {
         uint256 listedPrice = items[_itemId].price;
         uint256 actualPrice = listedPrice + ((listedPrice * feePercentage) / 100);
         return actualPrice;
+    }
+
+    function getAggregatorPrice()
+
+    function getUsdPrice(uint256 _itemId) public view returns (uint256) {
+        uint256 actualPrice = getPrice();
+
     }
 
     function buyNft(uint256 _itemId) external payable nonReentrant {

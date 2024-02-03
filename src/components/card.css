@@ -1,26 +1,61 @@
 .mainstyle {
     padding: 30px;
+    position: relative;
+    background-color: #2a2f35;
+    /* filter: blur(8px); */
+    /* -webkit-filter: blur(8px); */
+    z-index: 0;
+    height: 500vh;
 }
 
+
 .css {
+    position: relative;
     background-color: #9fd3c7;
     text-decoration-color: white;
 }
 
 .cardImage {
-    width: 200px;
-    height: 300px;
-    object-fit: scale-down;
+    width: 100px;
+    position: relative;
+    height: 200px;
+    object-fit: cover;
+}
 
+.card {
+    transition: transform .2s;
+    position: relative;
+    
+}
+
+.cardBorder{
+    border-radius: 15px;
+    padding: 10px;  
+    border: 1px solid white;
+}
+.cardBorder:hover{
+    border: 2px solid white;
+    transform: translateY(-2px);
+    position: relative;
+    z-index: 1;
+}
+
+.imageWrapper {
+    position: relative;
+    z-index: 2;
+    padding: 1px;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    position: relative;
+    z-index: 1;
 }
 
 .design {
+    position: relative;
     display: block;
     background-color: #e4eddb;
     /*#ececec ; */
-
-}
-
-.navdesgn {
-    background: #9fd3c7;
+    
 }

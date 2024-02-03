@@ -25,58 +25,66 @@ function CardList({ data, type }) {
 
   return (
     <div className="mainstyle">
-      <Row xs={1} md={4} className="g-4" style={{ height: "100vh" }}>
+      <Row xs={1} md={4} className="g-4" >
         {data.map((item, idx) => (
           <Col key={idx}>
-            <Card style={{ width: '18rem' }}>
+            <div className="cardBorder">
+              <Card className="card" >
 
-              <Card.Img  variant="top" className="cardImage"  src={item.image} style={{ width: "286px", height: "170px", objectFit:"fit" }} />
+                <div className="imageWrapper">
+                  <Card.Img variant="top" className="cardImage" src={item.image} />
+                </div>
 
-              <Card.Body className="css" style={{ background: "" }} >
+                <Card.Body className="css" style={{ height: "150px" }} >
 
-                {
-                  type == 'canBuy' ?
-                    <>
-                      <Card.Title>{item.name}</Card.Title>
-                      <Card.Text>
-                        <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ objectFit: "container", width: "15px" }} />
-                        <span style={{ padding: "10px", paddingRight: "50%" }}>{formatEther(item.price)}</span>
-                        <Button variant='info' style={{ background: "#ececec", alignContent: "right" }} onClick={() => buyFunction(item)} >Buy</Button>
-                      </Card.Text>
-                    </>
-                    : type == 'collection' ?
+                  {
+                    type == 'canBuy' ?
                       <>
                         <Card.Title>{item.name}</Card.Title>
-                        Listing for:
-                        <br />
-                        <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
-                        <span style={{ padding: "10px", paddingRight: "60%" }}>{formatEther(item.price)}</span>
-                        {
-                          item.co_owner != "0x0000000000000000000000000000000000000000" ?
-                            <>
-                              <span style={{ alignContent: "right" }} ><ProgressBar now={item.co_owner != signer.address ? (item.ownerCut).toString() : (100n - item.ownerCut).toString()} label={`${item.co_owner != signer.address ? (item.ownerCut).toString() : (100n - item.ownerCut).toString()}%`} /></span>
-                            </>
-                            :
-                            <></>
-                        }
-
-                        <br />
+                        <Card.Text>
+                          <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ objectFit: "container", width: "15px" }} />
+                          <span style={{ padding: "10px", paddingRight: "50%" }}>{formatEther(item.price)} <br />
+                            USD { formatEther(item.price) * 2,305.19 } </span>
+                          <Button variant='info' style={{ background: "#ececec", alignContent: "right" }} onClick={() => buyFunction(item)} >Buy</Button>
+                        </Card.Text>
                       </>
-                      : type == 'bought' ?
+                      : type == 'collection' ?
                         <>
                           <Card.Title>{item.name}</Card.Title>
-                          Bought For
+                          Listing for:
+                          <br />
                           <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
-                          {formatEther(item.price)}
+                          <span style={{ padding: "10px", paddingRight: "60%" }}>{formatEther(item.price)} <br />
+                            USD { formatEther(item.price) * 2,305.19 }</span>
+                          {
+                            item.co_owner != "0x0000000000000000000000000000000000000000" ?
+                              <>
+                                <span style={{ alignContent: "right" }} ><ProgressBar now={item.co_owner != signer.address ? (item.ownerCut).toString() : (100n - item.ownerCut).toString()} label={`${item.co_owner != signer.address ? (item.ownerCut).toString() : (100n - item.ownerCut).toString()}%`} /></span>
+                              </>
+                              :
+                              <></>
+                          }
+
+                          <br />
                         </>
-                        :
-                        <></>
+                        : type == 'bought' ?
+                          <>
+                            <Card.Title>{item.name}</Card.Title>
+                            Bought For
+                            <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
+                            {formatEther(item.price)}
+                            <br />
+                            USD { formatEther(item.price) *  2,305.19 }
+                          </>
+                          :
+                          <></>
 
-                }
+                  }
 
 
-              </Card.Body>
-            </Card>
+                </Card.Body>
+              </Card>
+            </div>
           </Col>
         ))}
       </Row>

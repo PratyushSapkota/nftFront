@@ -10,7 +10,7 @@ export default function Navbar({ connectValue, connectFunction, account }) {
     return (
         <>
     <div data-bs-theme= "dark">
-                <nav className="navbar navbar-expand-lg bg-body-tertiary">
+                <Nav className="navbar navbar-expand-lg bg-body-tertiary">
                     <div className="container-fluid">
                         <Link style={{ paddingLeft: "20px" }} className="navbar-brand" to="/home">NFT MARKET PLACE</Link>
                         <div className="collapse navbar-collapse" id="navbarNav">
@@ -20,6 +20,9 @@ export default function Navbar({ connectValue, connectFunction, account }) {
                                 </li>
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/collection">Collection</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/bought">Bought</Link>
                                 </li>
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/create">Create</Link>
@@ -39,7 +42,7 @@ export default function Navbar({ connectValue, connectFunction, account }) {
                                 </>
                         }
                     </Button>
-                </nav>
+                </Nav>
            </div>
         </>
     )

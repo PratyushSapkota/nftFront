@@ -140,7 +140,9 @@ export function Create() {
                 </Spinner>
               </div>
               :
-              <>
+              <>  
+                <Form.Check type='switch' label="Draw" />
+
                 <Form.Control type='file' onChange={setFile} />
                 <br />
                 <InputGroup >
