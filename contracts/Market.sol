@@ -153,12 +153,6 @@ contract Market is ReentrancyGuard {
         return actualPrice;
     }
 
-    function getAggregatorPrice()
-
-    function getUsdPrice(uint256 _itemId) public view returns (uint256) {
-        uint256 actualPrice = getPrice();
-
-    }
 
     function buyNft(uint256 _itemId) external payable nonReentrant {
         uint256 actualPrice = getPrice(_itemId);

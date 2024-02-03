@@ -15,16 +15,16 @@ export default function Navbar({ connectValue, connectFunction, account }) {
                         <Link style={{ paddingLeft: "20px" }} className="navbar-brand" to="/home">NFT MARKET PLACE</Link>
                         <div className="collapse navbar-collapse" id="navbarNav">
                             <ul className="navbar-nav">
-                                <li className="nav-item">
+                                <li className="nav-item route-button">
                                     <Link className="nav-link active" aria-current="page" to="/home">Home</Link>
                                 </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/collection">Collection</Link>
+                                <li className="nav-item route-button">
+                                    <Link className="nav-link " to="/collection">Collection</Link>
                                 </li>
-                                <li className="nav-item">
+                                <li className="nav-item route-button">
                                     <Link className="nav-link" to="/bought">Bought</Link>
                                 </li>
-                                <li className="nav-item">
+                                <li className="nav-item route-button">
                                     <Link className="nav-link" to="/create">Create</Link>
                                 </li>
 

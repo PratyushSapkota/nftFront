@@ -23,7 +23,21 @@ function CardList({ data, type }) {
     await (await market.buyNft(_item.itemId, { value: _item.price })).wait()
   }
 
+  if (data.length == 0){
+    // console.log("No data here")
+    return (
+      <>
+      <h1 style={{
+        padding: "300px",
+        color: "white",
+        fontSize: "20px"
+      }} className="text-center"> Nothing to Show Here</h1>
+      </>
+    )
+  }
+
   return (
+
     <div className="mainstyle">
       <Row xs={1} md={4} className="g-4" >
         {data.map((item, idx) => (
@@ -44,7 +58,7 @@ function CardList({ data, type }) {
                         <Card.Text>
                           <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ objectFit: "container", width: "15px" }} />
                           <span style={{ padding: "10px", paddingRight: "50%" }}>{formatEther(item.price)} <br />
-                            USD { formatEther(item.price) * 2,305.19 } </span>
+                            USD { formatEther(item.price) * 2305.19 } </span>
                           <Button variant='info' style={{ background: "#ececec", alignContent: "right" }} onClick={() => buyFunction(item)} >Buy</Button>
                         </Card.Text>
                       </>
@@ -55,7 +69,7 @@ function CardList({ data, type }) {
                           <br />
                           <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
                           <span style={{ padding: "10px", paddingRight: "60%" }}>{formatEther(item.price)} <br />
-                            USD { formatEther(item.price) * 2,305.19 }</span>
+                            USD { formatEther(item.price) * 2305.19 }</span>
                           {
                             item.co_owner != "0x0000000000000000000000000000000000000000" ?
                               <>
@@ -74,7 +88,7 @@ function CardList({ data, type }) {
                             <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
                             {formatEther(item.price)}
                             <br />
-                            USD { formatEther(item.price) *  2,305.19 }
+                            USD { formatEther(item.price) *  2305.19 }
                           </>
                           :
                           <></>

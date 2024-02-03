@@ -1,14 +1,17 @@
 .mainstyle {
     padding: 30px;
     position: relative;
-    background-color: #2a2f35;
+    background-color: #1a2027;
     /* filter: blur(8px); */
     /* -webkit-filter: blur(8px); */
     z-index: 0;
     height: 500vh;
 }
 
-
+.route-button :hover{
+    background-color: #34404e;
+    border-radius: 6px;
+}
 .css {
     position: relative;
     background-color: #9fd3c7;
@@ -55,7 +58,7 @@
 .design {
     position: relative;
     display: block;
-    background-color: #e4eddb;
-    /*#ececec ; */
+    background-color: #1a2027;
+    height: 100vh;
     
 }
