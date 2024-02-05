@@ -9,8 +9,8 @@ const navdesgn = {}
 export default function Navbar({ connectValue, connectFunction, account }) {
     return (
         <>
-    <div data-bs-theme= "dark">
-                <Nav className="navbar navbar-expand-lg bg-body-tertiary">
+    <div >
+                <Nav className="navbar navbar-expand-lg bg-body-tertiary" style={{background: "#accbff"}}>
                     <div className="container-fluid">
                         <Link style={{ paddingLeft: "20px" }} className="navbar-brand" to="/home">NFT MARKET PLACE</Link>
                         <div className="collapse navbar-collapse" id="navbarNav">
