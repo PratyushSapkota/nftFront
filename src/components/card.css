@@ -1,7 +1,7 @@
 .mainstyle {
     padding: 30px;
     position: relative;
-    background-color: #1a2027;
+    background-color: #accbff;
     /* filter: blur(8px); */
     /* -webkit-filter: blur(8px); */
     z-index: 0;
@@ -9,7 +9,7 @@
 }
 
 .route-button :hover{
-    background-color: #34404e;
+    background-color: #accbff;
     border-radius: 6px;
 }
 .css {
@@ -61,4 +61,29 @@
     background-color: #accbff;
     height: 100vh;
     
+}
+
+
+.navbar .navbar-expand-lg .bg-body-tertiary .nav {
+    background-color: red;
+}
+
+#drawing-board{
+    width: 100%;
+    border: 1px solid whitesmoke;
+    
+}
+
+#tldraw{
+    width: 75%;
+}
+
+#create-page-container{
+    padding-top: 50px;
+}
+
+#upload-button-container{
+    text-align: center;
+    padding-top: 30px;
+    bottom: 10%;
 }

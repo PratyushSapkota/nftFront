@@ -7,8 +7,9 @@ import { Bought } from './components/bought';
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ethers } from "ethers"
-import PaintBox from './components/paint';
+import Paint from './components/paint';
 import ScreenshotButton from './components/test2';
+import NFTDraw from './components/draw';
 
 
 
@@ -74,8 +75,7 @@ function App() {
                   <Route path="/bought" element={<Bought />} />
                   <Route path="/home" element={<Home />} />
                   <Route path="/create" element={<Create />} />
-                  <Route path="/test" element={<PaintBox />} />
-                  <Route path="/test2" element={<ScreenshotButton />} />
+                  <Route path="/draw" element={<NFTDraw />} />
                   
                 </Routes>
               :

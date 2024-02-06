@@ -19,13 +19,16 @@ export default function Navbar({ connectValue, connectFunction, account }) {
                                     <Link className="nav-link active" aria-current="page" to="/home">Home</Link>
                                 </li>
                                 <li className="nav-item route-button">
-                                    <Link className="nav-link " to="/collection">Collection</Link>
+                                    <Link className="nav-link " to="/collection">Lisitings</Link>
                                 </li>
                                 <li className="nav-item route-button">
-                                    <Link className="nav-link" to="/bought">Bought</Link>
+                                    <Link className="nav-link" to="/bought">Collection</Link>
                                 </li>
                                 <li className="nav-item route-button">
-                                    <Link className="nav-link" to="/create">Create</Link>
+                                    <Link className="nav-link" to="/create">Upload</Link>
+                                </li>
+                                <li className="nav-item route-button">
+                                    <Link className="nav-link" to="/draw">Draw your own NFT!</Link>
                                 </li>
 
                             </ul>

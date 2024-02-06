@@ -1,7 +1,10 @@
 import { parseEther, ethers } from 'ethers'
 import "./card.css"
-import { createFactory, useEffect, useState } from 'react';
+import React, { createFactory, useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { create } from "ipfs-http-client"
 import { Button } from 'react-bootstrap';
@@ -13,6 +16,10 @@ import Spinner from 'react-bootstrap/Spinner';
 import { redirect } from 'react-router-dom';
 import marketAddress from "../contract_info/Market-address.json"
 import nftAddress from "../contract_info/Nft-address.json"
+import { Tldraw } from '@tldraw/tldraw';
+
+
+import html2canvas from 'html2canvas';
 
 const design = {}
 const apiKey = "36884d16602f1fbe240e"
@@ -33,6 +40,21 @@ export function Create() {
   const [coOwnAddr, setCoOwnAddr] = useState()
   const [selfCut, setSelfCut] = useState(50)
   const [loading, setLoading] = useState(false)
+  const [isDraw, changeDrawTo] = useState(false)
+
+  //spinner
+
+  /*
+loading ?
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: "90vh" }}>
+                      <Spinner animation="border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    </div>
+                    :
+
+  */
+
 
 
   async function start() {
@@ -123,73 +145,88 @@ export function Create() {
     createNFT(`https://amethyst-legal-albatross-808.mypinata.cloud/ipfs/${res.data.IpfsHash}`)
   }
 
+  const captureScreenshot = () => {
+    const target = document.getElementById('tldraw')
+
+    if (target) {
+      html2canvas(target).then(canvas => {
+        const screenshot = canvas.toDataURL('image/png')
+        const link = document.createElement('a')
+        link.href = screenshot;
+        link.download = 'screenshot.png'
+        link.click()
+      })
+    }
+  }
+
+
   useEffect(() => {
     start()
   }, [])
 
 
+
   return (
-    <div className='design '>
-      <>
-        <form style={{ padding: "150px" }}>
-          {
-            loading ?
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: "90vh" }}>
-                <Spinner animation="border" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-              </div>
-              :
-              <>  
-                <Form.Check type='switch' label="Draw" />
+    <div className='design'>
 
-                <Form.Control type='file' onChange={setFile} />
-                <br />
-                <InputGroup >
-                  <InputGroup.Text >Name</InputGroup.Text>
-                  <Form.Control type='text' onChange={(e) => setName(e.target.value)} />
-                </InputGroup>
-                <br />
+      <Container id='create-page-container'>
+        <Row>
 
-                <InputGroup>
-                  <InputGroup.Text>Price</InputGroup.Text>
-                  <Form.Control type='number' onChange={(e) => setPrice(e.target.value)} />
-                </InputGroup>
-                <br />
-
-                <Form.Check type='switch' value={true} label="Co Own" onChange={() => coOwn ? changeCoOwn(false) : changeCoOwn(true)} />
-
+          <Col>
+            <Form.Control type='file' onChange={setFile} />
+            <>
+              <form id="overall" >
                 {
-                  coOwn ?
-                    <>
-                      <br />
-                      <InputGroup>
-                        <InputGroup.Text>Co-Owner Address</InputGroup.Text>
-                        <Form.Control type='text' onChange={(e) => setCoOwnAddr(e.target.value)} />
-                      </InputGroup>
-                      <br />
-                      <InputGroup
-                      >
-                        Your Cut: {selfCut}% <br />
-                        Co-Owner Cut: {100 - selfCut}%
-                        <Form.Range style={{ width: "50%" }} onChange={(e) => setSelfCut(e.target.value)} />
-                      </InputGroup>
-                      <br />
-                    </>
-                    :
-                    <>
+                  <>
+                    <InputGroup >
+                      <InputGroup.Text >Name</InputGroup.Text>
+                      <Form.Control type='text' onChange={(e) => setName(e.target.value)} />
+                    </InputGroup>
+                    <br />
 
-                      <br />
-                    </>
+                    <InputGroup>
+                      <InputGroup.Text>Price</InputGroup.Text>
+                      <Form.Control type='number' onChange={(e) => setPrice(e.target.value)} />
+                    </InputGroup>
+                    <br />
+
+                    <Form.Check type='switch' value={true} label="Co Own" onChange={() => coOwn ? changeCoOwn(false) : changeCoOwn(true)} />
+
+                    {
+                      coOwn ?
+                        <>
+                          <br />
+                          <InputGroup>
+                            <InputGroup.Text>Co-Owner Address</InputGroup.Text>
+                            <Form.Control type='text' onChange={(e) => setCoOwnAddr(e.target.value)} />
+                          </InputGroup>
+                          <br />
+                          <InputGroup
+                          >
+                            Your Cut: {selfCut}% <br />
+                            Co-Owner Cut: {100 - selfCut}%
+                            <Form.Range style={{ width: "50%" }} onChange={(e) => setSelfCut(e.target.value)} />
+                          </InputGroup>
+                          <br />
+                        </>
+                        :
+                        <>
+
+                        </>
+                    }
+
+                  </>
                 }
+              </form>
+            </>
+          </Col>
+        </Row>
 
-                {/* <button onClick={() => upload(image)} > Upload </button> */}
-                <Button variant='info' style={{ background: "white", alignContent: "right" }} onClick={() => upload(image)} >Upload</Button>
+      </Container>
 
-              </>
-          }
-        </form>
-      </>
+      <div id="upload-button-container" >
+        <Button variant='info' style={{ background: "white", alignContent: "right" }} onClick={() => upload(image)} >Upload</Button>
+      </div>
 
     </div>
   )
