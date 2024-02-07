@@ -26,6 +26,7 @@ export default function NFTDraw() {
                 <Tldraw id="tldraw" />
             </div>
 
+
         </>
     )
 
