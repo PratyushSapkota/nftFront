@@ -4,13 +4,14 @@ import React, { createFactory, useEffect, useState } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
-import { create } from "ipfs-http-client"
 import { Button } from 'react-bootstrap';
 
 import axios from 'axios'
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import FormData from "form-data"
+
+import getConversionRate from './conversionRate';
 
 import marketAbi from "../contract_info/Market-abi.json"
 import nftAbi from "../contract_info/NFT-abi.json"
@@ -21,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import marketAddress from "../contract_info/Market-address.json"
 import nftAddress from "../contract_info/Nft-address.json"
 
+const conversionRate = getConversionRate()
 
 export function Create() {
 
@@ -36,18 +38,6 @@ export function Create() {
   const [loadingStage, setLoadingStage] = useState(1)
 
   const navigate = useNavigate()
-
-
-  //spinner
-
-  /*
-loading ?
-                    
-                    :
-
-  */
-
-
 
   async function start() {
     const ethersProvider = new ethers.BrowserProvider(window.ethereum)
@@ -80,7 +70,7 @@ loading ?
       await (await market.Co_listItem(
         nft.target,
         tokenCount,
-        parseEther(price.toString()),
+        parseEther((price).toString()),
         coOwnAddr,
         selfCut
       )).wait()
@@ -88,7 +78,7 @@ loading ?
       await (await market.listItem(
         nft.target,
         tokenCount,
-        parseEther(price.toString())
+        parseEther((price).toString())
       )).wait()
     }
 

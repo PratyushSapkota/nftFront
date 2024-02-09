@@ -2,14 +2,14 @@ import "./card.css";
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import Image from 'react-bootstrap';
+
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
 import { formatEther, ethers } from 'ethers';
 
 import marketAbi from "../contract_info/Market-abi.json"
 import marketAddress from "../contract_info/Market-address.json"
-
+import getConversionRate from "./conversionRate";
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import { useNavigate } from "react-router-dom";
 const mainstyle = {}
@@ -17,7 +17,7 @@ const ethersProvider = new ethers.BrowserProvider(window.ethereum)
 const signer = await ethersProvider.getSigner()
 const market = new ethers.Contract(marketAddress.address, marketAbi.abi, signer)
 
-const conversionRate = 327361.10
+const conversionRate = getConversionRate()
 
 function CardList({ data, type }) {
 
@@ -30,7 +30,7 @@ function CardList({ data, type }) {
   }
 
   if (data.length == 0){
-    // console.log("No data here")
+    
     return (
       <>
       <h1 style={{
@@ -64,7 +64,7 @@ function CardList({ data, type }) {
                         <Card.Text>
                           <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ objectFit: "container", width: "15px" }} />
                           <span style={{ padding: "10px", paddingRight: "50%" }}>{formatEther(item.price)} <br />
-                            NPR { (formatEther(item.price) * conversionRate).toFixed(2) } </span>
+                            USD { (formatEther(item.price) * conversionRate).toFixed(2) } </span>
                           <Button variant='info' style={{ background: "#ececec", alignContent: "right" }} onClick={() => buyFunction(item)} >Buy</Button>
                         </Card.Text>
                       </>
@@ -74,8 +74,7 @@ function CardList({ data, type }) {
                           Listing for:
                           <br />
                           <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
-                          <span style={{ padding: "10px", paddingRight: "60%" }}>{formatEther(item.price)} <br />
-                            NPR { (formatEther(item.price) * conversionRate).toFixed(2) }</span>
+                          <span style={{ padding: "10px", paddingRight: "60%" }}>{formatEther(item.price)} </span>
                           {
                             item.co_owner != "0x0000000000000000000000000000000000000000" ?
                               <>
@@ -93,8 +92,6 @@ function CardList({ data, type }) {
                             Bought For
                             <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
                             {formatEther(item.price)}
-                            <br />
-                            NPR { (formatEther(item.price) *  conversionRate).toFixed(2) }
                           </>
                           :
                           <></>

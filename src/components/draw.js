@@ -112,14 +112,15 @@ export default function NFTDraw() {
     return (
         stage == 0 ?
             <>
-                <div id="container" >
+                <div id="master">
                     <div id="draw-container" >
-                        <Tldraw id="tldraw" />
-                    </div>
-                    <div id="confirm-button">
-                        <Button onClick={() => captureScreenshot()} >Confirm!</Button>
+                        <Tldraw id="tldraw" autofocus={true} >
+                        </Tldraw>
                     </div>
 
+                    <div id="confirmButton-div">
+                        <button onClick={() => captureScreenshot()} id="confirmButton" >Confirm!</button>
+                    </div>
                 </div>
 
             </>
