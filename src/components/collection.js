@@ -31,6 +31,7 @@ export function CollectionI() {
       if (item.owner == signer.address || item.co_owner == signer.address) {
         const uri = await nft.tokenURI(item.tokenId)
         const metadata = (await axios.get(uri)).data
+        console.log(metadata)
 
         const totalPrice = await market.getPrice(item.tokenId)
 

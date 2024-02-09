@@ -1,15 +1,17 @@
 import { parseEther, ethers } from 'ethers'
 import "./card.css"
 import React, { createFactory, useEffect, useState } from 'react';
-import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
-import InputGroup from 'react-bootstrap/InputGroup';
 import { create } from "ipfs-http-client"
 import { Button } from 'react-bootstrap';
+
 import axios from 'axios'
+import InputGroup from 'react-bootstrap/InputGroup';
+import Form from 'react-bootstrap/Form';
 import FormData from "form-data"
+
 import marketAbi from "../contract_info/Market-abi.json"
 import nftAbi from "../contract_info/NFT-abi.json"
 import Spinner from 'react-bootstrap/Spinner';

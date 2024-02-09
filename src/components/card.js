@@ -11,16 +11,22 @@ import marketAbi from "../contract_info/Market-abi.json"
 import marketAddress from "../contract_info/Market-address.json"
 
 import ProgressBar from 'react-bootstrap/ProgressBar';
+import { useNavigate } from "react-router-dom";
 const mainstyle = {}
 const ethersProvider = new ethers.BrowserProvider(window.ethereum)
 const signer = await ethersProvider.getSigner()
 const market = new ethers.Contract(marketAddress.address, marketAbi.abi, signer)
 
+const conversionRate = 327361.10
 
 function CardList({ data, type }) {
 
+  const navigate = useNavigate()
+
   async function buyFunction(_item) {
     await (await market.buyNft(_item.itemId, { value: _item.price })).wait()
+    navigate("/bought")
+    
   }
 
   if (data.length == 0){
@@ -58,7 +64,7 @@ function CardList({ data, type }) {
                         <Card.Text>
                           <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ objectFit: "container", width: "15px" }} />
                           <span style={{ padding: "10px", paddingRight: "50%" }}>{formatEther(item.price)} <br />
-                            USD { formatEther(item.price) * 2305.19 } </span>
+                            NPR { (formatEther(item.price) * conversionRate).toFixed(2) } </span>
                           <Button variant='info' style={{ background: "#ececec", alignContent: "right" }} onClick={() => buyFunction(item)} >Buy</Button>
                         </Card.Text>
                       </>
@@ -69,7 +75,7 @@ function CardList({ data, type }) {
                           <br />
                           <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
                           <span style={{ padding: "10px", paddingRight: "60%" }}>{formatEther(item.price)} <br />
-                            USD { formatEther(item.price) * 2305.19 }</span>
+                            NPR { (formatEther(item.price) * conversionRate).toFixed(2) }</span>
                           {
                             item.co_owner != "0x0000000000000000000000000000000000000000" ?
                               <>
@@ -88,7 +94,7 @@ function CardList({ data, type }) {
                             <img src='https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029' style={{ width: "15px" }} />
                             {formatEther(item.price)}
                             <br />
-                            USD { formatEther(item.price) *  2305.19 }
+                            NPR { (formatEther(item.price) *  conversionRate).toFixed(2) }
                           </>
                           :
                           <></>

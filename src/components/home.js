@@ -9,6 +9,7 @@ import marketAddress from "../contract_info/Market-address.json"
 import nftAddress from "../contract_info/Nft-address.json"
 
 import Spinner from 'react-bootstrap/Spinner';
+import { useNavigate } from "react-router-dom";
 
 const ethersProvider = new ethers.BrowserProvider(window.ethereum)
 let signer = await ethersProvider.getSigner()
@@ -17,19 +18,13 @@ const design = {}
 
 export function Home({ _test }) {
 
-
+    const navigate = useNavigate()
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(true)
 
     const loadContracts = (_signer) => {
         market = new ethers.Contract(marketAddress.address, marketAbi.abi, _signer)
         nft = new ethers.Contract(nftAddress.address, nftAbi.abi, _signer)
-
-        window.ethereum.on('accountsChanged', async (accounts) => {
-            signer = await ethersProvider.getSigner()
-            loadContracts(signer)
-        })
-
     }
 
 
@@ -58,6 +53,8 @@ export function Home({ _test }) {
         setData(items)
         setLoading(false)
     }
+
+
 
     useEffect(() => {
         getData()

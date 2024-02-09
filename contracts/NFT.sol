@@ -4,8 +4,8 @@ pragma solidity ^0.8.23;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 contract NFT is ERC721URIStorage {
-    uint256 public tokenCount;
-    address private immutable market;
+    uint256 public tokenCount; // int
+    address private immutable market;   // string != address
 
     constructor(
         address _market,
