@@ -3,7 +3,11 @@ import "./draw.css"
 import html2canvas from "html2canvas"
 import { Button } from "react-bootstrap";
 
+import { useNavigate } from "react-router-dom";
+
 export default function NFTDraw() {
+    const navigate = useNavigate()
+
 
     const captureScreenshot = () => {
         const target = document.getElementById('tldraw')
@@ -21,10 +25,10 @@ export default function NFTDraw() {
 
     return (
         <>
-            <Button onClick={() => captureScreenshot()} >Confirm!</Button>
-            <div id="draw-container">
+            <div id="draw-container" >
                 <Tldraw id="tldraw" />
             </div>
+            <Button onClick={() => captureScreenshot()} >Confirm!</Button>
 
 
         </>

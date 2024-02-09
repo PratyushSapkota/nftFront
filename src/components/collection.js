@@ -7,6 +7,7 @@ import nftAbi from "../contract_info/NFT-abi.json"
 import "./card.css"
 import marketAddress from "../contract_info/Market-address.json"
 import nftAddress from "../contract_info/Nft-address.json"
+import axios from "axios";
 
 import Spinner from 'react-bootstrap/Spinner';
 
@@ -29,7 +30,8 @@ export function CollectionI() {
       const item = await market.items(i)
       if (item.owner == signer.address || item.co_owner == signer.address) {
         const uri = await nft.tokenURI(item.tokenId)
-        const metadata = await (await fetch(uri)).json()
+        const metadata = (await axios.get(uri)).data
+
         const totalPrice = await market.getPrice(item.tokenId)
 
         if (!item.sold) {
@@ -43,7 +45,6 @@ export function CollectionI() {
         }
 
       }
-      console.log(item)
     }
 
 

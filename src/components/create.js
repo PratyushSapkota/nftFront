@@ -13,21 +13,12 @@ import FormData from "form-data"
 import marketAbi from "../contract_info/Market-abi.json"
 import nftAbi from "../contract_info/NFT-abi.json"
 import Spinner from 'react-bootstrap/Spinner';
-import { redirect } from 'react-router-dom';
+
+import { useNavigate } from "react-router-dom";
+
 import marketAddress from "../contract_info/Market-address.json"
 import nftAddress from "../contract_info/Nft-address.json"
-import { Tldraw } from '@tldraw/tldraw';
 
-
-import html2canvas from 'html2canvas';
-
-const design = {}
-const apiKey = "36884d16602f1fbe240e"
-const apiSecret = "77b008440155fc49b21ae2883c784ae6be7dde31edc321aa6b4263ef8be0d4ed"
-
-
-const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`
-const urlJSON = `https://api.pinata.cloud/pinning/pinJSONToIPFS`
 
 export function Create() {
 
@@ -40,17 +31,16 @@ export function Create() {
   const [coOwnAddr, setCoOwnAddr] = useState()
   const [selfCut, setSelfCut] = useState(50)
   const [loading, setLoading] = useState(false)
-  const [isDraw, changeDrawTo] = useState(false)
+  const [loadingStage, setLoadingStage] = useState(1)
+
+  const navigate = useNavigate()
+
 
   //spinner
 
   /*
 loading ?
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: "90vh" }}>
-                      <Spinner animation="border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                      </Spinner>
-                    </div>
+                    
                     :
 
   */
@@ -68,8 +58,6 @@ loading ?
 
   }
 
-
-
   const setFile = (e) => {
     e.preventDefault()
     const file = e.target.files[0]
@@ -79,10 +67,13 @@ loading ?
   }
 
   const mintAndList = async (_uri) => {
+
     await (await nft.mint(_uri)).wait()
+    setLoadingStage(2)
     const tokenCount = await nft.tokenCount()
     await (await nft.setApprovalForAll(market.target, true)).wait()
 
+    setLoadingStage(3)
     if (coOwn) {
       await (await market.Co_listItem(
         nft.target,
@@ -100,65 +91,31 @@ loading ?
     }
 
     setLoading(false)
+    navigate("/collection")
 
-
-  }
-
-  const createNFT = async (_imageUrl) => {
-    const data = { "Image": _imageUrl, "name": name }
-    console.log(data)
-
-    const res = await axios.post(
-      urlJSON,
-      JSON.stringify(data),
-      {
-        headers: {
-          "Content-Type": 'application/json',
-          'pinata_api_key': apiKey,
-          'pinata_secret_api_key': apiSecret
-        }
-      }
-    )
-    mintAndList("https://amethyst-legal-albatross-808.mypinata.cloud/ipfs/" + res.data.IpfsHash)
   }
 
   const upload = async (_file) => {
     setLoading(true)
     const formData = new FormData()
-    formData.append("file", _file)
+    formData.append("image", _file)
+    formData.append("name", name)
+    formData.append("tokenId", Number(await nft.tokenCount()) + 1)
 
     const res = await axios.post(
-      url,
+      "http://localhost:3001/db",
       formData,
       {
         maxContentLength: "Infinity",
         headers: {
-          "Content-Type": `multipart/form-data`,
-          'pinata_api_key': apiKey,
-          'pinata_secret_api_key': apiSecret
+          "Content-Type": `multipart/form-data`
         }
       }
     )
 
-    // console.log(res)
-    console.log("IMAGE: ", res.data.IpfsHash)
-    createNFT(`https://amethyst-legal-albatross-808.mypinata.cloud/ipfs/${res.data.IpfsHash}`)
+    console.log(res.data.uri)
+    mintAndList(res.data.uri)
   }
-
-  const captureScreenshot = () => {
-    const target = document.getElementById('tldraw')
-
-    if (target) {
-      html2canvas(target).then(canvas => {
-        const screenshot = canvas.toDataURL('image/png')
-        const link = document.createElement('a')
-        link.href = screenshot;
-        link.download = 'screenshot.png'
-        link.click()
-      })
-    }
-  }
-
 
   useEffect(() => {
     start()
@@ -169,64 +126,100 @@ loading ?
   return (
     <div className='design'>
 
-      <Container id='create-page-container'>
-        <Row>
-
-          <Col>
-            <Form.Control type='file' onChange={setFile} />
-            <>
-              <form id="overall" >
-                {
+      {loading ?
+        <>
+          <div style={{ display: 'flex', flexDirection: "column", justifyContent: 'center', textAlign: "center" , alignItems: 'center', height: "90vh" }}>
+            <Spinner animation="border" role="status">
+            </Spinner>
+            <br />
+            <div >
+              {loadingStage == 1 ?
+                <>
+                  1/3
+                  <br />
+                  Confirm to MINT your NFT
+                </>
+                : loadingStage == 2 ?
                   <>
-                    <InputGroup >
-                      <InputGroup.Text >Name</InputGroup.Text>
-                      <Form.Control type='text' onChange={(e) => setName(e.target.value)} />
-                    </InputGroup>
+                    2/3
                     <br />
-
-                    <InputGroup>
-                      <InputGroup.Text>Price</InputGroup.Text>
-                      <Form.Control type='number' onChange={(e) => setPrice(e.target.value)} />
-                    </InputGroup>
-                    <br />
-
-                    <Form.Check type='switch' value={true} label="Co Own" onChange={() => coOwn ? changeCoOwn(false) : changeCoOwn(true)} />
-
-                    {
-                      coOwn ?
-                        <>
-                          <br />
-                          <InputGroup>
-                            <InputGroup.Text>Co-Owner Address</InputGroup.Text>
-                            <Form.Control type='text' onChange={(e) => setCoOwnAddr(e.target.value)} />
-                          </InputGroup>
-                          <br />
-                          <InputGroup
-                          >
-                            Your Cut: {selfCut}% <br />
-                            Co-Owner Cut: {100 - selfCut}%
-                            <Form.Range style={{ width: "50%" }} onChange={(e) => setSelfCut(e.target.value)} />
-                          </InputGroup>
-                          <br />
-                        </>
-                        :
-                        <>
-
-                        </>
-                    }
-
+                    Allow us to access your NFT
                   </>
-                }
-              </form>
-            </>
-          </Col>
-        </Row>
+                  :
+                  <>
+                    3/3
+                    <br />
+                    Confirm to LIST your NFT to the marketplace
+                  </>
+              }
+            </div>
 
-      </Container>
+          </div>
+        </>
+        :
+        <>
 
-      <div id="upload-button-container" >
-        <Button variant='info' style={{ background: "white", alignContent: "right" }} onClick={() => upload(image)} >Upload</Button>
-      </div>
+          <Container id='create-page-container'>
+            <Row>
+
+              <Col>
+                <Form.Control type='file' onChange={setFile} />
+                <br />
+                <>
+                  <form id="overall" >
+                    {
+                      <>
+                        <InputGroup >
+                          <InputGroup.Text >Name</InputGroup.Text>
+                          <Form.Control type='text' onChange={(e) => setName(e.target.value)} />
+                        </InputGroup>
+                        <br />
+
+                        <InputGroup>
+                          <InputGroup.Text>Price</InputGroup.Text>
+                          <Form.Control type='number' onChange={(e) => setPrice(e.target.value)} />
+                        </InputGroup>
+                        <br />
+
+                        <Form.Check type='switch' value={true} label="Co Own" onChange={() => coOwn ? changeCoOwn(false) : changeCoOwn(true)} />
+
+                        {
+                          coOwn ?
+                            <>
+                              <br />
+                              <InputGroup>
+                                <InputGroup.Text>Co-Owner Address</InputGroup.Text>
+                                <Form.Control type='text' onChange={(e) => setCoOwnAddr(e.target.value)} />
+                              </InputGroup>
+                              <br />
+                              <InputGroup
+                              >
+                                Your Cut: {selfCut}% <br />
+                                Co-Owner Cut: {100 - selfCut}%
+                                <Form.Range style={{ width: "50%" }} onChange={(e) => setSelfCut(e.target.value)} />
+                              </InputGroup>
+                              <br />
+                            </>
+                            :
+                            <>
+
+                            </>
+                        }
+
+                      </>
+                    }
+                  </form>
+                </>
+              </Col>
+            </Row>
+
+          </Container>
+
+          <div id="upload-button-container" >
+            <Button variant='info' style={{ background: "white", alignContent: "right" }} onClick={() => upload(image)} >Upload</Button>
+          </div>
+        </>}
+
 
     </div>
   )
